@@ -1,0 +1,4 @@
+[submodule "libraries/ESP-ISO7816"]
+	path = libraries/ESP-ISO7816
+	url = https://github.com/TheBrycigan/ESP-ISO7816.git
+	branch = main

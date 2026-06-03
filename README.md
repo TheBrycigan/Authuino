@@ -19,19 +19,26 @@ authuino/
 │   ├── ui.*                   LVGL screens
 │   └── audio.* accel.* cam_qr.*    peripherals
 └── libraries/
-    └── ESP-ISO7816/           the ISO 7816-3 driver (the SmartCard class)
+    └── ESP-ISO7816/           git submodule → TheBrycigan/ESP-ISO7816
 ```
 
 The low-level **ISO 7816-3 T=0/T=1 smart-card driver** (the `SmartCard`
-class, `ESP_ISO7816.h`) was split out into its own library,
-[**ESP-ISO7816**](https://github.com/TheBrycigan/ESP-ISO7816). The firmware's
+class, `ESP_ISO7816.h`) lives in its own repository,
+[**ESP-ISO7816**](https://github.com/TheBrycigan/ESP-ISO7816), and is consumed
+here as a **git submodule** at `libraries/ESP-ISO7816`. The firmware's
 `sc_interface` layer builds the OATH/PIV/CCID logic on top of it.
 
-> **Status:** the library currently lives **vendored** at
-> `libraries/ESP-ISO7816/` so the firmware builds with no extra steps. Once
-> it's published to its own GitHub repo it becomes a git **submodule** at the
-> same path — see [SETUP.md](SETUP.md). Either way the build command is the
-> same.
+## Cloning
+
+```bash
+git clone --recurse-submodules https://github.com/TheBrycigan/Authuino.git
+# or, after a plain clone:
+git submodule update --init --recursive
+```
+
+> The submodule is pinned to a specific commit of ESP-ISO7816. If that repo
+> isn't published yet, `submodule update` can't fetch it — see
+> [SETUP.md](SETUP.md) for the one-time publish step.
 
 ## Building
 
@@ -39,8 +46,8 @@ class, `ESP_ISO7816.h`) was split out into its own library,
 arduino-cli compile --fqbn esp32:esp32:esp32s3 --libraries libraries Authuino
 ```
 
-See [**SETUP.md**](SETUP.md) for the required Arduino IDE USB settings and for
-publishing the library / switching to a submodule.
+See [**SETUP.md**](SETUP.md) for the required Arduino IDE USB settings, the
+publish step, and how to pull library updates into the firmware.
 
 ## License
 
