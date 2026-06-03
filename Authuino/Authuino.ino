@@ -9,8 +9,9 @@
  *   ui.h/cpp                - LVGL screens (codes + PIN entry)
  *
  * The low-level ISO 7816-3 T=0/T=1 driver (the SmartCard class) lives in
- * the separate AuthuinoISO7816 library, pulled in as a git submodule at
- * libraries/AuthuinoISO7816. See SETUP.md.
+ * the separate ESP-ISO7816 library at libraries/ESP-ISO7816 (vendored for
+ * now; published as github.com/TheBrycigan/ESP-ISO7816 and switched to a
+ * git submodule once available). See SETUP.md.
  */
 
 #define FW_VERSION "v0.4"

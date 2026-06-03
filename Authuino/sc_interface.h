@@ -3,7 +3,7 @@
 /*
  * sc_interface.h
  * Smartcard interface for Authuino, on top of the SmartCard driver
- * provided by the AuthuinoISO7816 library (Authuino_SmartCard.h).
+ * provided by the ESP-ISO7816 library (ESP_ISO7816.h).
  *
  * Public API is unchanged from the SCLib version:
  *   sc_init / sc_poll / sc_run_session / sc_recalculate / sc_deactivate
@@ -18,7 +18,7 @@
  */
 
 #include <Arduino.h>
-#include <Authuino_SmartCard.h>   // AuthuinoISO7816 library (git submodule)
+#include <ESP_ISO7816.h>          // ESP-ISO7816 library (libraries/ESP-ISO7816)
 
 // ---------------------------------------------------------------------------
 // Pin definitions

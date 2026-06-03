@@ -1,4 +1,0 @@
-[submodule "libraries/AuthuinoISO7816"]
-	path = libraries/AuthuinoISO7816
-	url = https://github.com/thebrycigan/AuthuinoISO7816.git
-	branch = main

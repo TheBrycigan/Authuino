@@ -1,8 +1,8 @@
 /*
  * sc_interface.cpp
- * Smartcard driver for Authuino, on top of Authuino_SmartCard.
+ * Smartcard driver for Authuino, on top of the ESP-ISO7816 library.
  *
- * The new SmartCard class handles the full T=0 procedure-byte protocol
+ * The SmartCard class (ESP_ISO7816.h) handles the full T=0 procedure-byte protocol
  * (NULL 0x60, ACK ALL = INS, ACK ONE = INS xor 0xFF, direct SW1) and
  * GET RESPONSE chaining for SW=61xx.  This file only contains:
  *
