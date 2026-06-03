@@ -26,20 +26,47 @@ library updates* below.
 git submodule update --init --recursive
 ```
 
-Because ESP-ISO7816 is published, this fetches the library into
-`libraries/ESP-ISO7816/` at the pinned commit.
+This fetches every submodule under `libraries/` at its pinned commit:
+ESP-ISO7816, LVGL, Arduino_GFX, quirc's `upstream/`, and esp32-camera.
+
+## Third-party libraries (git submodules)
+
+All libraries the firmware needs are pinned under `libraries/`:
+
+| Submodule | Upstream | Pin |
+| --- | --- | --- |
+| `libraries/ESP-ISO7816` | TheBrycigan/ESP-ISO7816 | branch `main` |
+| `libraries/lvgl` | lvgl/lvgl | `v8.4.0` |
+| `libraries/Arduino_GFX` | moononournation/Arduino_GFX | `v1.6.5` |
+| `libraries/quirc/upstream` | dlbeer/quirc | `v1.2` |
+| `libraries/esp32-camera` | espressif/esp32-camera | `v2.1.6` |
+
+Two need a word of explanation:
+
+- **LVGL** must be configured with an `lv_conf.h`, which LVGL looks for one
+  level **above** the `lvgl/` folder — i.e. at `libraries/lv_conf.h`. Copy
+  `libraries/lvgl/lv_conf_template.h` there, rename it, flip its leading
+  `#if 0` to `#if 1`, and set `LV_COLOR_DEPTH 16`. Without it the build fails
+  with `lv_conf.h: No such file or directory`. (It's configuration, so it is
+  not vendored here.)
+- **esp32-camera** is pinned only as a provenance reference. `esp_camera.h`
+  actually comes from the ESP32 Arduino core, which bundles this same
+  component; `arduino-cli` does not treat `libraries/esp32-camera` as a
+  library (it has no `library.properties`), so it neither overrides the core
+  nor interferes with the build.
 
 ## Build
 
-Arduino CLI (`--libraries libraries` puts ESP-ISO7816 on the search path):
+Arduino CLI (`--libraries libraries` puts all the submodule libraries on the
+search path). Make sure `libraries/lv_conf.h` exists first (see above):
 
 ```bash
 arduino-cli compile --fqbn esp32:esp32:esp32s3 --libraries libraries Authuino
 ```
 
-Arduino IDE: point the IDE at this `libraries/` folder, or symlink/copy
-`libraries/ESP-ISO7816` into your sketchbook `libraries/` directory, then open
-`Authuino/Authuino.ino`.
+Arduino IDE: point the IDE's sketchbook `libraries/` at this `libraries/`
+folder (or symlink/copy its contents there), add `lv_conf.h` as above, then
+open `Authuino/Authuino.ino`.
 
 ### Required Arduino IDE Tools settings (USB CCID)
 
@@ -54,16 +81,27 @@ USB DFU On Boot   = Disabled
 
 ## Pulling library updates into the firmware
 
-The submodule pins a commit (keeps builds reproducible). To adopt newer
-ESP-ISO7816 commits:
+Each submodule pins a commit (keeps builds reproducible). **ESP-ISO7816**
+tracks branch `main`, so bump it with `--remote`:
 
 ```bash
-git submodule update --remote libraries/ESP-ISO7816   # latest of the tracked branch (main)
+git submodule update --remote libraries/ESP-ISO7816   # latest of branch main
 git add libraries/ESP-ISO7816
 git commit -m "Bump ESP-ISO7816"
 git push
 ```
 
-While developing the library locally, `libraries/ESP-ISO7816/` is a live
+The third-party libraries (**LVGL**, **Arduino_GFX**, **quirc**,
+**esp32-camera**) are pinned to **release tags**, so bump them by checking out
+a newer tag inside the submodule:
+
+```bash
+git -C libraries/lvgl fetch --tags
+git -C libraries/lvgl checkout v8.4.0        # or a newer v8.x tag
+git add libraries/lvgl
+git commit -m "Bump LVGL"
+```
+
+While developing ESP-ISO7816 locally, `libraries/ESP-ISO7816/` is a live
 checkout — edits there are used by the build immediately; commit & push them
-inside the submodule (to the ESP-ISO7816 repo), then bump as above.
+inside the submodule, then bump as above.

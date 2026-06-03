@@ -2,3 +2,15 @@
 	path = libraries/ESP-ISO7816
 	url = https://github.com/TheBrycigan/ESP-ISO7816.git
 	branch = main
+[submodule "libraries/lvgl"]
+	path = libraries/lvgl
+	url = https://github.com/lvgl/lvgl.git
+[submodule "libraries/Arduino_GFX"]
+	path = libraries/Arduino_GFX
+	url = https://github.com/moononournation/Arduino_GFX.git
+[submodule "libraries/quirc/upstream"]
+	path = libraries/quirc/upstream
+	url = https://github.com/dlbeer/quirc.git
+[submodule "libraries/esp32-camera"]
+	path = libraries/esp32-camera
+	url = https://github.com/espressif/esp32-camera.git

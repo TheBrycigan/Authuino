@@ -18,8 +18,12 @@ authuino/
 │   ├── rtc_time.*             PCF85063 RTC wrapper
 │   ├── ui.*                   LVGL screens
 │   └── audio.* accel.* cam_qr.*    peripherals
-└── libraries/
-    └── ESP-ISO7816/           git submodule → TheBrycigan/ESP-ISO7816
+└── libraries/                 third-party deps, each pinned as a git submodule
+    ├── ESP-ISO7816/           → TheBrycigan/ESP-ISO7816        (smart-card driver)
+    ├── lvgl/                  → lvgl/lvgl @ v8.4.0             (GUI toolkit)
+    ├── Arduino_GFX/           → moononournation/Arduino_GFX @ v1.6.5  (ST7796 display)
+    ├── quirc/                 Arduino wrapper; upstream/ → dlbeer/quirc @ v1.2  (QR decode)
+    └── esp32-camera/          → espressif/esp32-camera @ v2.1.6       (pinned reference)
 ```
 
 The low-level **ISO 7816-3 T=0/T=1 smart-card driver** (the `SmartCard`
@@ -27,6 +31,27 @@ class, `ESP_ISO7816.h`) lives in its own repository,
 [**ESP-ISO7816**](https://github.com/TheBrycigan/ESP-ISO7816), and is consumed
 here as a **git submodule** at `libraries/ESP-ISO7816`. The firmware's
 `sc_interface` layer builds the OATH/PIV/CCID logic on top of it.
+
+All third-party libraries are likewise pinned as **git submodules** under
+`libraries/`, so `git clone --recurse-submodules` yields a reproducible,
+self-contained build tree:
+
+| Library | Submodule → upstream | Pin | Used by |
+| --- | --- | --- | --- |
+| ESP-ISO7816 | `libraries/ESP-ISO7816` → TheBrycigan/ESP-ISO7816 | branch `main` | `sc_interface` (smart-card driver) |
+| LVGL | `libraries/lvgl` → lvgl/lvgl | `v8.4.0` | `ui.*`, `Authuino.ino` (touch UI) |
+| GFX Library for Arduino | `libraries/Arduino_GFX` → moononournation/Arduino_GFX | `v1.6.5` | `Authuino.ino` (ST7796 display) |
+| quirc | `libraries/quirc/upstream` → dlbeer/quirc | `v1.2` | `cam_qr.cpp` (QR decode) |
+| esp32-camera | `libraries/esp32-camera` → espressif/esp32-camera | `v2.1.6` | `cam_qr.cpp` (see note) |
+
+> - **LVGL** is pinned to the v8 line (the firmware uses the v8 driver API) and
+>   still needs an `lv_conf.h` placed in `libraries/` (next to `lvgl/`) to
+>   compile — that's configuration, not vendored here.
+> - **quirc** isn't an Arduino library upstream, so `libraries/quirc` adds a
+>   thin wrapper (`library.properties` + `src/` shims) that compiles
+>   `upstream/lib/*.c`.
+> - **esp32-camera** is pinned for provenance; the build still uses the copy
+>   bundled in the ESP32 Arduino core, which provides `esp_camera.h`.
 
 ## Cloning
 
@@ -36,9 +61,9 @@ git clone --recurse-submodules https://github.com/TheBrycigan/Authuino.git
 git submodule update --init --recursive
 ```
 
-> The submodule is pinned to a specific commit of ESP-ISO7816. If that repo
-> isn't published yet, `submodule update` can't fetch it — see
-> [SETUP.md](SETUP.md) for the one-time publish step.
+> Each submodule is pinned to a specific commit/tag for reproducible builds.
+> `--recurse-submodules` (or `git submodule update --init --recursive`) fetches
+> them all into `libraries/`.
 
 ## Building
 
@@ -47,7 +72,7 @@ arduino-cli compile --fqbn esp32:esp32:esp32s3 --libraries libraries Authuino
 ```
 
 See [**SETUP.md**](SETUP.md) for the required Arduino IDE USB settings, the
-publish step, and how to pull library updates into the firmware.
+`lv_conf.h` requirement, and how to bump the submodules.
 
 ## License
 
