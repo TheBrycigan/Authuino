@@ -21,7 +21,7 @@ authuino/
 └── libraries/                 third-party deps, each pinned as a git submodule
     ├── ESP-ISO7816/           → TheBrycigan/ESP-ISO7816        (smart-card driver)
     ├── lvgl/                  → lvgl/lvgl @ v8.4.0             (GUI toolkit)
-    ├── Arduino_GFX/           → moononournation/Arduino_GFX @ v1.6.5  (ST7796 display)
+    ├── Arduino_GFX/           → moononournation/Arduino_GFX @ v1.6.6  (ST7796 display)
     ├── quirc/                 Arduino wrapper; upstream/ → dlbeer/quirc @ v1.2  (QR decode)
     └── esp32-camera/          → espressif/esp32-camera @ v2.1.6       (pinned reference)
 ```
@@ -40,7 +40,7 @@ self-contained build tree:
 | --- | --- | --- | --- |
 | ESP-ISO7816 | `libraries/ESP-ISO7816` → TheBrycigan/ESP-ISO7816 | branch `main` | `sc_interface` (smart-card driver) |
 | LVGL | `libraries/lvgl` → lvgl/lvgl | `v8.4.0` | `ui.*`, `Authuino.ino` (touch UI) |
-| GFX Library for Arduino | `libraries/Arduino_GFX` → moononournation/Arduino_GFX | `v1.6.5` | `Authuino.ino` (ST7796 display) |
+| GFX Library for Arduino | `libraries/Arduino_GFX` → moononournation/Arduino_GFX | `v1.6.6` | `Authuino.ino` (ST7796 display) |
 | quirc | `libraries/quirc/upstream` → dlbeer/quirc | `v1.2` | `cam_qr.cpp` (QR decode) |
 | esp32-camera | `libraries/esp32-camera` → espressif/esp32-camera | `v2.1.6` | `cam_qr.cpp` (see note) |
 
@@ -64,6 +64,24 @@ git submodule update --init --recursive
 > Each submodule is pinned to a specific commit/tag for reproducible builds.
 > `--recurse-submodules` (or `git submodule update --init --recursive`) fetches
 > them all into `libraries/`.
+
+## Toolchain
+
+The firmware builds against the **ESP32 Arduino core** (the `esp32` boards
+package by Espressif Systems) — not a submodule, so its version is recorded
+here:
+
+| Component | Version |
+| --- | --- |
+| ESP32 Arduino core (`esp32` by Espressif Systems) | `3.2.1` |
+| Board / FQBN | ESP32S3 Dev Module (`esp32:esp32:esp32s3`) |
+
+```bash
+arduino-cli core install esp32:esp32@3.2.1 \
+  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+```
+
+(Arduino IDE: Boards Manager → "esp32 by Espressif Systems" → 3.2.1.)
 
 ## Building
 

@@ -37,7 +37,7 @@ All libraries the firmware needs are pinned under `libraries/`:
 | --- | --- | --- |
 | `libraries/ESP-ISO7816` | TheBrycigan/ESP-ISO7816 | branch `main` |
 | `libraries/lvgl` | lvgl/lvgl | `v8.4.0` |
-| `libraries/Arduino_GFX` | moononournation/Arduino_GFX | `v1.6.5` |
+| `libraries/Arduino_GFX` | moononournation/Arduino_GFX | `v1.6.6` |
 | `libraries/quirc/upstream` | dlbeer/quirc | `v1.2` |
 | `libraries/esp32-camera` | espressif/esp32-camera | `v2.1.6` |
 
@@ -56,6 +56,16 @@ Two need a word of explanation:
   nor interferes with the build.
 
 ## Build
+
+The firmware targets **ESP32 Arduino core (the `esp32` boards package)
+3.2.1**:
+
+```bash
+arduino-cli core install esp32:esp32@3.2.1 \
+  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+```
+
+(Arduino IDE: Boards Manager → "esp32 by Espressif Systems" → 3.2.1.)
 
 Arduino CLI (`--libraries libraries` puts all the submodule libraries on the
 search path). Make sure `libraries/lv_conf.h` exists first (see above):
